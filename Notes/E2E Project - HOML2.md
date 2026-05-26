@@ -62,4 +62,5 @@ $$
 13. Clean the data. Handle empty values using *drop(), dropna() and fillna()*. Missing values can be filled with median, mean, most common or constant values.
 14. Handle text and categorical values. They can be converted to numbers using *OrdinalEncoder*. *OneHotEncoding* gives it binary values for each column, making it easier to use. Sklearn also has some functions which make it easy for debugging and ensuring consistency of columns.
 15. Scale features and transform. Model will not work well if attributes are of different scales. This can be done by *Min-Max Scaling/Normalisation* or *Standardization*. MMS can set it from 0 - 1 or -1 - 1. Standardization uses mean and SD, and is less likely to get affected by outliers. Make sure all graphs are bell-curved. Apply log or sqaure root to ensure that. *Bucketizing* gives each attribute a percentile value, giving a uniform distrubution.
-16. For multimodal features, either one hot encode the buckets or add another feature representing similarity, which is usually computed using *Radial Basis Function(RBF)*.
+16. For multimodal features, either one hot encode the buckets or add another feature representing similarity, which is usually computed using *Radial Basis Function(RBF)*. RBF measures how similar something is to a reference point.
+17. Create custom sklearn transformers if needed.
