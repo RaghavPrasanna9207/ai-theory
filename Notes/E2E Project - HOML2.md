@@ -64,3 +64,5 @@ $$
 15. Scale features and transform. Model will not work well if attributes are of different scales. This can be done by *Min-Max Scaling/Normalisation* or *Standardization*. MMS can set it from 0 - 1 or -1 - 1. Standardization uses mean and SD, and is less likely to get affected by outliers. Make sure all graphs are bell-curved. Apply log or sqaure root to ensure that. *Bucketizing* gives each attribute a percentile value, giving a uniform distrubution.
 16. For multimodal features, either one hot encode the buckets or add another feature representing similarity, which is usually computed using *Radial Basis Function(RBF)*. RBF measures how similar something is to a reference point.
 17. Create custom sklearn transformers if needed.
+18. Use *Pipelines* for a sequence of transformations. Use make_pipeline to do it easily. Everything in the pipeline should have a fit_transform() method, except for the last one, which can be anything. *Column Transformers* help select specific columns and transform them using pipelines. One pipeline can be used for all the preprocessing and cleaning.
+19. Train and evaluate on a training set
