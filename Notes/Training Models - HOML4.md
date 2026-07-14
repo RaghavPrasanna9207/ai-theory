@@ -58,3 +58,55 @@ Regularization reduces a model's risk of overfitting by constraining its weights
 *   **How it Works**: When given an instance, the model computes a specific score for every single class. It then applies the Softmax function (normalized exponential) to these scores to estimate the probability of each class. The model predicts the class with the highest probability.
 *   **Cost Function**: Uses the Cross-Entropy loss function to measure how wrong the estimated probabilities are compared to the target classes.
 *   **Limitation**: The classifier only predicts one single class at a time. Therefore, it cannot be used for multi-output recognition, such as identifying multiple different people in the exact same photograph.
+*
+## Formulas
+
+### Linear Regression
+**Linear Regression Model (Vectorized):**
+$$\hat{y} = \theta^T x$$
+
+**Mean Squared Error (MSE) Cost Function:**
+$$MSE(\theta) = \frac{1}{m} \sum_{i=1}^{m} (\theta^T x^{(i)} - y^{(i)})^2$$
+
+**The Normal Equation:**
+$$\hat{\theta} = (X^T X)^{-1} X^T y$$
+
+### Gradient Descent
+**Partial Derivative of the Cost Function:**
+$$\frac{\partial}{\partial \theta_j} MSE(\theta) = \frac{2}{m} \sum_{i=1}^{m} (\theta^T x^{(i)} - y^{(i)}) x_j^{(i)}$$
+
+**Gradient Vector of the Cost Function:**
+$$\nabla_\theta MSE(\theta) = \frac{2}{m} X^T (X \theta - y)$$
+
+**Gradient Descent Step (where $\eta$ is the learning rate):**
+$$\theta^{(\text{next step})} = \theta - \eta \nabla_\theta MSE(\theta)$$
+
+### Regularization
+**Ridge Regression Cost Function:**
+$$J(\theta) = MSE(\theta) + \alpha \frac{1}{2} \sum_{i=1}^{n} \theta_i^2$$
+
+**Lasso Regression Cost Function:**
+$$J(\theta) = MSE(\theta) + \alpha \sum_{i=1}^{n} |\theta_i|$$
+
+**Elastic Net Cost Function (where $r$ is the mix ratio):**
+$$J(\theta) = MSE(\theta) + r \alpha \sum_{i=1}^{n} |\theta_i| + \frac{1 - r}{2} \alpha \sum_{i=1}^{n} \theta_i^2$$
+
+### Logistic Regression
+**Sigmoid Function:**
+$$\sigma(t) = \frac{1}{1 + e^{-t}}$$
+
+**Estimated Probability:**
+$$\hat{p} = \sigma(\theta^T x)$$
+
+**Log Loss Cost Function (for the whole training set):**
+$$J(\theta) = -\frac{1}{m} \sum_{i=1}^{m} \left[ y^{(i)} \log(\hat{p}^{(i)}) + (1 - y^{(i)}) \log(1 - \hat{p}^{(i)}) \right]$$
+
+### Softmax Regression
+**Softmax Score for Class $k$:**
+$$s_k(x) = (\theta^{(k)})^T x$$
+
+**Softmax Function (Probability of Class $k$):**
+$$\hat{p}_k = \frac{\exp(s_k(x))}{\sum_{j=1}^{K} \exp(s_j(x))}$$
+
+**Cross-Entropy Cost Function:**
+$$J(\Theta) = - \frac{1}{m} \sum_{i=1}^{m} \sum_{k=1}^{K} y_k^{(i)} \log(\hat{p}_k^{(i)})$$
