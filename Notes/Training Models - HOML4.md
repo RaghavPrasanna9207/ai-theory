@@ -21,6 +21,7 @@
 1.  **Batch Gradient Descent**: Uses the complete training set to compute gradients at every single step.
     *   **Pros/Cons**: Extremely slow with large datasets, but scales perfectly with a large number of features.
     *   **Tolerance**: To decide when to stop training, you set a tiny number called tolerance. Whenever the norm of the gradient vector becomes less than this tolerance, training is interrupted.
+    *   **Convergence Rate**: When the cost function and its slope do not change abruptly, Batch Gradient Descent with a fixed learning rate has a convergence rate of $O(1/\text{iterations})$. If you divide your tolerance by 10 to get a more precise solution, the algorithm will have to run about 10 times more iterations to reach it.
 2.  **Stochastic Gradient Descent (SGD)**: Picks a single random instance in the training set at every step and computes gradients based only on that instance.
     *   **Pros/Cons**: Blazing fast and requires very little memory (supports out-of-core algorithms).
     *   **Behavior**: Due to its random nature, it bounces around and never truly settles at the optimal minimum. However, this bouncing helps it jump out of local minima in irregular cost functions.
@@ -28,11 +29,25 @@
 3.  **Mini-Batch Gradient Descent**: Computes gradients based on small, random sets of instances called mini-batches.
     *   **Pros/Cons**: Gets a significant performance boost from hardware optimization of matrix operations (especially on GPUs). It is less erratic than SGD but slightly more susceptible to getting stuck in local minima.
 
+### Comparison of Linear Regression Algorithms
+| Algorithm | Large $m$ (Many Instances) | Out-of-core support | Large $n$ (Many Features) | Hyperparams | Scaling required | Scikit-Learn Class |
+|:---|:---:|:---:|:---:|:---:|:---:|:---|
+| **Normal Equation** | Fast | No | Slow | 0 | No | `LinearRegression` |
+| **Batch GD** | Slow | No | Fast | 2 | Yes | n/a |
+| **Stochastic GD** | Fast | Yes | Fast | $\ge 2$ | Yes | `SGDRegressor` |
+| **Mini-Batch GD** | Fast | Yes | Fast | $\ge 2$ | Yes | n/a |
+
+> **Note:** Despite these differences during training, there is almost no difference *after* training. All these algorithms end up with very similar models and make predictions in exactly the same way.
+
 ## Polynomial Regression
 *   **Concept**: Fits non-linear data to a linear model. It accomplishes this by adding powers of each feature as new features, and then training a standard linear model on this extended, higher-dimensional set of features.
 
-## Evaluating Models: Learning Curves
-Learning curves plot a model's performance on both the training set and validation set as a function of the training set size. They are a primary tool for diagnosing fit.
+## Evaluating Models
+*   **Cross-Validation**: A primary way to estimate a model's generalization performance. If a model performs well on training data but poorly on validation folds, it is overfitting; if it performs poorly on both, it is underfitting.
+*   **Training Metrics vs. Evaluation Metrics**: The cost function used for *training* a model is often completely different from the performance measure used for *evaluating* it during testing. A good training cost function needs to have optimization-friendly derivatives (so Gradient Descent can work). However, the performance measure used for testing needs to be as close as possible to the final business objective (e.g., training with Log Loss but evaluating with Precision/Recall).
+
+### Learning Curves
+Learning curves plot a model's performance on both the training set and validation set as a function of the training set size. They are another primary tool for diagnosing fit.
 
 *   **Underfitting**: The model is too simple to capture the underlying pattern. The error on the training data goes up and reaches a high plateau. The validation error also reaches a high plateau, remaining very close to the training curve. Adding more training examples will not help; you must use a more complex model or engineer better features.
 *   **Overfitting**: The model memorizes the training data but fails to generalize. The training error is remarkably low, but the validation error is significantly higher, leaving a large, noticeable gap between the two curves. Adding more training examples will help reduce overfitting and bring the curves closer together.
@@ -42,6 +57,7 @@ Regularization reduces a model's risk of overfitting by constraining its weights
 
 *   **Ridge Regression (Tikhonov Regularization)**: Regularizes the model by adding an $L_2$ norm penalty to the cost function during training. This forces the algorithm to fit the data while keeping all feature weights as small as possible. If the regularization parameter (alpha) is too large, the weights approach zero, and the model turns into a flat line passing through the data's mean.
 *   **Lasso Regression**: Regularizes the model by adding an $L_1$ norm penalty. A defining characteristic of Lasso is that it tends to completely eliminate the weights of the least important features (setting them to zero). It performs automatic feature selection and outputs a sparse model.
+    *   **Subgradient Workaround**: The Lasso cost function is technically not differentiable when $\theta = 0$. The algorithm still works perfectly fine if you use a subgradient vector instead, which simply keeps a 0 gradient at $\theta = 0$.
 *   **Elastic Net**: A middle ground that mixes the Ridge and Lasso penalties via a customizable ratio.
     *   **When to use which**: Ridge is a great default starting point. If you suspect that only a small subset of features is actually useful, use Lasso or Elastic Net. Elastic Net is generally preferred over pure Lasso because Lasso can behave erratically when the number of features exceeds the number of training instances, or when several features are strongly correlated.
 *   **Early Stopping**: A completely different approach to regularization. You simply monitor the validation error during training and immediately stop the process as soon as the validation error reaches its minimum.
@@ -58,7 +74,7 @@ Regularization reduces a model's risk of overfitting by constraining its weights
 *   **How it Works**: When given an instance, the model computes a specific score for every single class. It then applies the Softmax function (normalized exponential) to these scores to estimate the probability of each class. The model predicts the class with the highest probability.
 *   **Cost Function**: Uses the Cross-Entropy loss function to measure how wrong the estimated probabilities are compared to the target classes.
 *   **Limitation**: The classifier only predicts one single class at a time. Therefore, it cannot be used for multi-output recognition, such as identifying multiple different people in the exact same photograph.
-*
+
 ## Formulas
 
 ### Linear Regression
